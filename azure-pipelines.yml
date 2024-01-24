@@ -38,7 +38,7 @@ stages:
           - script: |
               docker pull edenmor1989/counter-service:$(Build.BuildId)
               docker run -d --name test-counter-service -p 8080:80 edenmor1989/counter-service:$(Build.BuildId)
-              sleep 5 
+              sleep 1 
             displayName: Start Docker Container
 
           - script: |
