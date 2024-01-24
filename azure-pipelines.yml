@@ -1,12 +1,9 @@
-pr:
-- main
 
 trigger:
 - main
 
 stages:
   - stage: Build
-    condition: eq(variables['Build.Reason'], 'PullRequest')
     displayName: Build and Push Image
     jobs:
       - job: Build
