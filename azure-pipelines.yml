@@ -43,7 +43,7 @@ stages:
             displayName: Start Docker Container
 
           - script: |
-              curl http://localhost:8080
+              curl http://localhost:8081
               if [ $? -eq 0 ]; then
                 echo "Test Passed"
                 exit 0
