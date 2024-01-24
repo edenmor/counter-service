@@ -35,15 +35,8 @@ stages:
             displayName: Start Docker Container
 
           - script: |
-              curl http://localhost:8080
-              if [ $? -eq 0 ]; then
-                echo "Test Passed"
-                exit 0
-              else
-                echo "Test Failed"
-                exit 1
-              fi
-            displayName: Test Application
+              docker exec test-counter-service pytest 
+            displayName: Run Pytest
 
           - script: |
               docker stop test-counter-service
