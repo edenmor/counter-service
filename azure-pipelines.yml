@@ -11,9 +11,6 @@ stages:
           name: default
           vmImage: ado-linuxagent
         steps:
-          - script: echo Building the image...
-            displayName: 'Echo Build Start'
-
           - task: Docker@2
             displayName: Build Docker Image
             inputs:
@@ -32,12 +29,9 @@ stages:
           name: default
           vmImage: ado-linuxagent
         steps:
-          - script: echo Running Tests...
-            displayName: 'Echo Test Start'
-
           - script: |
               docker run -d --name test-counter-service -p 8080:80 edenmor1989/counter-service:$(Build.BuildId)
-              sleep 10 # wait for the container to initialize
+              sleep 1
             displayName: Start Docker Container
 
           - script: |
@@ -70,9 +64,6 @@ stages:
           runOnce:
             deploy:
               steps:
-                - script: echo Building and Pushing the image...
-                  displayName: 'Echo Build and Push Start'
-
                 - task: Docker@2
                   displayName: Build and Push Docker Image
                   inputs:
