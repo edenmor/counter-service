@@ -60,6 +60,7 @@ stages:
 
   - stage: Deploy
     displayName: Deploy to Production
+    condition: and(succeeded(), eq(variables['Build.Reason'], 'IndividualCI'))
     jobs:
       - deployment: Deploy
         displayName: Deploy
