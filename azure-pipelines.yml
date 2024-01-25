@@ -62,7 +62,7 @@ stages:
                   inputs:
                     containerRegistry: 'dockerhub_registry'
                     repository: 'edenmor1989/counter-service'
-                    command: 'buildAndPush'
+                    command: 'push'
                     Dockerfile: '**/Dockerfile'
                     tags: |
                       $(Build.BuildId)
