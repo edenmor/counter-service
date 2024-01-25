@@ -30,14 +30,20 @@ stages:
           vmImage: ado-linuxagent
         steps:
           - script: |
+              pytest 
+            displayName: Run Pytest
+            
+          - script: |
               docker run -d --name test-counter-service -p 8080:80 edenmor1989/counter-service:$(Build.BuildId)
               sleep 1
             displayName: Start Docker Container
-
           - script: |
-              pytest 
-            displayName: Run Pytest
-
+              container_status=$(docker inspect --format='{{.State.Health.Status}}' test-counter-service)
+              if [ "$container_status" != "healthy" ]; then
+                echo "Container health check failed"
+                exit 1
+              fi
+            displayName: Check Container Health
           - script: |
               docker stop test-counter-service
               docker rm test-counter-service
