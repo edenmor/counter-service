@@ -35,7 +35,7 @@ stages:
             displayName: Start Docker Container
 
           - script: |
-              docker exec test-counter-service pytest 
+              pytest 
             displayName: Run Pytest
 
           - script: |
