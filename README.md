@@ -12,3 +12,4 @@ curl -X GET localhost:80
 
 the number of post requests is updated everytime you do POST request
 and then displayed on screen
+
