@@ -30,14 +30,23 @@ stages:
           vmImage: ado-linuxagent
         steps:
           - script: |
+              pytest 
+            displayName: Run Pytest
+            
+          - script: |
               docker run -d --name test-counter-service -p 8080:80 edenmor1989/counter-service:$(Build.BuildId)
               sleep 1
             displayName: Start Docker Container
-
           - script: |
-              pytest 
-            displayName: Run Pytest
-
+              curl http://localhost:8080
+              if [ $? -eq 0 ]; then
+                echo "Test Passed"
+                exit 0
+              else
+                echo "Test Failed"
+                exit 1
+              fi
+            displayName: Check Container Health
           - script: |
               docker stop test-counter-service
               docker rm test-counter-service
@@ -79,4 +88,4 @@ stages:
                       docker pull edenmor1989/counter-service:$(Build.BuildId)
                       docker stop counter-service || true 
                       docker rm counter-service || true
-                      docker run -d --name counter-service -p 80:80 edenmor1989/counter-service:$(Build.BuildId)
+                      docker run -d --restart unless-stopped --name counter-service -p 80:80 edenmor1989/counter-service:$(Build.BuildId)
