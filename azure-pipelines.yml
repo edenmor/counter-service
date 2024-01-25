@@ -21,10 +21,10 @@ stages:
               repository: 'edenmor1989/counter-service'
 
   - stage: Test
-    displayName: Run Tests
+    displayName: Run Tests and Push Image
     jobs:
       - job: Test
-        displayName: Test
+        displayName: Test and Push
         pool:
           name: default
           vmImage: ado-linuxagent
@@ -32,11 +32,12 @@ stages:
           - script: |
               pytest 
             displayName: Run Pytest
-            
+
           - script: |
               docker run -d --name test-counter-service -p 8080:80 edenmor1989/counter-service:$(Build.BuildId)
               sleep 1
             displayName: Start Docker Container
+
           - script: |
               curl http://localhost:8080
               if [ $? -eq 0 ]; then
@@ -47,23 +48,15 @@ stages:
                 exit 1
               fi
             displayName: Check Container Health
+
           - script: |
               docker stop test-counter-service
               docker rm test-counter-service
             displayName: Cleanup Test Container
 
-  - stage: PushToRegistry
-    displayName: Push Image to Docker Registry
-    condition: and(succeeded(), ne(variables['Build.Reason'], 'PullRequest'))
-    jobs:
-      - job: Push
-        displayName: Push
-        pool:
-          name: default
-          vmImage: ado-linuxagent
-        steps:
           - task: Docker@2
             displayName: Push Docker Image to Registry
+            condition: succeeded()
             inputs:
               containerRegistry: 'dockerhub_registry'
               repository: 'edenmor1989/counter-service'
@@ -85,8 +78,6 @@ stages:
           runOnce:
             deploy:
               steps:
-                - script: echo Deploying to production...
-                  displayName: 'Echo Deploy Start'
 
                 - task: SSH@0
                   displayName: 'Deploy to Production Server'
