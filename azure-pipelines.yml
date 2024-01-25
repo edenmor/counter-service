@@ -52,6 +52,25 @@ stages:
               docker rm test-counter-service
             displayName: Cleanup Test Container
 
+  - stage: PushToRegistry
+    displayName: Push Image to Docker Registry
+    condition: and(succeeded(), ne(variables['Build.Reason'], 'PullRequest'))
+    jobs:
+      - job: Push
+        displayName: Push
+        pool:
+          name: default
+          vmImage: ado-linuxagent
+        steps:
+          - task: Docker@2
+            displayName: Push Docker Image to Registry
+            inputs:
+              containerRegistry: 'dockerhub_registry'
+              repository: 'edenmor1989/counter-service'
+              command: 'push'
+              tags: |
+                $(Build.BuildId)
+
   - stage: Deploy
     displayName: Deploy to Production
     condition: and(succeeded(), eq(variables['Build.Reason'], 'IndividualCI'))
@@ -66,16 +85,6 @@ stages:
           runOnce:
             deploy:
               steps:
-                - task: Docker@2
-                  displayName: Build and Push Docker Image
-                  inputs:
-                    containerRegistry: 'dockerhub_registry'
-                    repository: 'edenmor1989/counter-service'
-                    command: 'push'
-                    Dockerfile: '**/Dockerfile'
-                    tags: |
-                      $(Build.BuildId)
-
                 - script: echo Deploying to production...
                   displayName: 'Echo Deploy Start'
 
