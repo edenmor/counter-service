@@ -28,6 +28,7 @@ curl -X GET localhost:80
 cd counter-service
 docker build -t counter-service .
 docker run -d -p 80:80 counter-service
+'''
 
 CI/CD Pipeline
 The CI/CD pipeline, defined in azure-pipelines.yml, automates the process of building, testing, and deploying the application. Upon a commit and push to the repository, the pipeline is triggered, ensuring that the application is always up-to-date in the production environment.
