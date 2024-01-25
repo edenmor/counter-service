@@ -38,9 +38,12 @@ stages:
               sleep 1
             displayName: Start Docker Container
           - script: |
-              container_status=$(docker inspect --format='{{.State.Health.Status}}' test-counter-service)
-              if [ "$container_status" != "healthy" ]; then
-                echo "Container health check failed"
+              curl http://localhost:8080
+              if [ $? -eq 0 ]; then
+                echo "Test Passed"
+                exit 0
+              else
+                echo "Test Failed"
                 exit 1
               fi
             displayName: Check Container Health
