@@ -14,7 +14,7 @@ spec:
     spec:
       containers:
       - name: myapp
-        image: edenmor1989/counter-service:57
+        image: edenmor1989/counter-service:55
         ports:
         - containerPort: 8080
         volumeMounts:
