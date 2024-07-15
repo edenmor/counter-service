@@ -17,3 +17,10 @@ spec:
         image: edenmor1989/counter-service:58
         ports:
         - containerPort: 8080
+        volumeMounts:
+        - mountPath: "/data"
+          name: post-counter-storage
+      volumes:
+      - name: post-counter-storage
+        persistentVolumeClaim:
+          claimName: post-counter-pvc
