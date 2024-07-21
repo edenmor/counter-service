@@ -8,7 +8,6 @@ stages:
       - job: Build
         displayName: Build
         pool:
-          name: default
           vmImage: ubuntu-latest
         steps:
           - task: Docker@2
