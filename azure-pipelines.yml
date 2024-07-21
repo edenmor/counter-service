@@ -9,7 +9,7 @@ stages:
         displayName: Build
         pool:
           name: default
-          vmImage: ado-linuxagent
+          vmImage: ubuntu-latest
         steps:
           - task: Docker@2
             displayName: Build Docker Image
