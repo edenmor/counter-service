@@ -29,7 +29,6 @@ jobs:
   deploy:
     name: Deploy to Production
     runs-on: ubuntu-latest
-    needs: push
     if: github.event_name == 'push'
     steps:
     - name: SSH Deploy to Production Server
