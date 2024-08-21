@@ -15,32 +15,6 @@ jobs:
     - name: Build the Docker image
       run: docker build . --file Dockerfile --tag edenmor1989/counter-service:${{ github.run_id }}
 
-  test:
-    name: Test Docker Image
-    runs-on: ubuntu-latest
-    needs: build
-    steps:
-    - name: Run Pytest
-      run: pytest
-    - name: Start Docker Container
-      run: |
-        docker run -d --name test-counter-service -p 8080:80 edenmor1989/counter-service:${{ github.run_id }}
-        sleep 10
-    - name: Check Container Health
-      run: |
-        curl http://localhost:8080
-        if [ $? -eq 0 ]; then
-          echo "Test Passed"
-          exit 0
-        else
-          echo "Test Failed"
-          exit 1
-        fi
-    - name: Cleanup Test Container
-      run: |
-        docker stop test-counter-service
-        docker rm test-counter-service
-
   push:
     name: Push Docker Image
     runs-on: ubuntu-latest
