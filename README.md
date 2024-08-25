@@ -1,37 +1,33 @@
-# Counter Service
+Counter Service
+Description
+This repository contains the implementation of the Counter Service, a Flask web application designed to count POST requests and display the count on a GET request. Below is a summary of the key changes and implementations:
 
-## Getting Started
+Python Flask Web Service: Developed a Flask application to count POST requests and display the count on a GET request.
+Dockerization: Containerized the Flask application using Docker for easy deployment and scalability.
+CI/CD Pipeline: Configured an Azure DevOps pipeline for continuous integration and deployment, automating the build, test, and deployment processes.
+Testing: Included basic tests to ensure the application functionality, especially the counting mechanism.
+Documentation: Added this README.md file detailing the setup, usage, and other relevant information about the project.
+Additional Considerations:
 
-## Introduction
-Counter Service is a simple Flask web application designed to count the number of POST requests it receives and display this count on a GET request. The application is containerized using Docker, making it easy to deploy and scale. It is part of a DevOps exercise, demonstrating CI/CD practices using Azure DevOps.
+The counter resets to zero upon each new deployment as the current implementation does not include persistent storage.
+Deployment Methods
+1. Azure Pipelines
+To deploy using Azure Pipelines:
 
-# USAGE:
+Ensure you have the azure-pipelines.yaml file in the root of your repository. This file defines the CI/CD pipeline for automating the build, test, and deployment processes.
+Set up a private EC2 instance as an agent for your builds.
+Commit your changes to trigger the pipeline.
+2. Argo CD
+For deployment using Argo CD:
 
-# POST- 
-curl -X POST localhost:80
+Use the following files:
+deployment.yaml: Defines the deployment of the Flask application.
+service.yaml: Configures the service to expose the Flask application.
+Attach the dev file to Argo CD with the deployment and service YAMLs.
+Configure Argo CD to manage and monitor the deployment of your application.
+3. GitHub Actions
+To deploy using GitHub Actions:
 
-
-# GET
-curl -X GET localhost:80
-
-### Prerequisites
-- Docker
-- Python 3.8 or higher (if running locally without Docker)
-- Access to an Azure DevOps account (for CI/CD pipeline)
-
-### Installation
-
-## Running with Docker:**
-1. Clone the repository:
-   ```sh
-   git clone https://github.com/edenmor/counter-service.git
-cd counter-service
-docker build -t counter-service .
-docker run -d -p 80:80 counter-service
-
-CI/CD Pipeline
-The CI/CD pipeline, defined in azure-pipelines.yml, automates the process of building, testing, and deploying the application. Upon a commit and push to the repository, the pipeline is triggered, ensuring that the application is always up-to-date in the production environment.
-
-Deployment
-The application is deployed on an AWS EC2 instance. The deployment process is handled by the CI/CD pipeline, which uses SSH to connect to the instance and deploy the Docker container.
-
+Ensure you have workflow files in the .github/workflows directory.
+Define your workflows in the YAML files located in this directory.
+Push your changes to trigger the GitHub Actions workflows for building, testing, and deploying the application.
