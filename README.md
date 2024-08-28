@@ -20,6 +20,7 @@ Commit your changes to trigger the pipeline.
 2. Argo CD
 For deployment using Argo CD:
 
+
 Use the following files:
 deployment.yaml: Defines the deployment of the Flask application.
 service.yaml: Configures the service to expose the Flask application.
