@@ -1,16 +1,21 @@
 from flask import Flask
+import redis
 
 app = Flask(__name__)
-counter = 0
+
+# Connect to Redis
+redis_client = redis.Redis(host='redis', port=6379, db=0)
 
 @app.route('/', methods=['POST'])
 def increment_counter():
-    global counter
-    counter += 1
+    # Increment the counter in Redis
+    counter = redis_client.incr('counter')
     return f"Counter incremented. Total POST requests: {counter}"
 
 @app.route('/', methods=['GET'])
 def display_counter():
+    # Retrieve the counter value from Redis
+    counter = redis_client.get('counter') or 0
     return f"""
     <html>
         <head>
@@ -38,12 +43,11 @@ def display_counter():
         </head>
         <body>
             <div class="content">
-                <div class="counter">Total POST Requests: {counter}</div>
+                <div class="counter">Total POST Requests: {str(counter)}</div>
             </div>
         </body>
     </html>
     """
 
 if __name__ == '__main__':
-    app.run(debug=True, port=8082)
-
+    app.run(debug=True, port=8080)
