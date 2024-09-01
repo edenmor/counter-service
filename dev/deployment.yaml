@@ -1,26 +1,37 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: myapp
+  name: counter-service
 spec:
+  replicas: 1
   selector:
     matchLabels:
-      app: myapp
-  replicas: 3
+      app: counter-service
   template:
     metadata:
       labels:
-        app: myapp
+        app: counter-service
     spec:
       containers:
-      - name: myapp
-        image: edenmor1989/counter-service:58
+      - name: counter-service
+        image: edenmor1989/counter-service:persistent
         ports:
         - containerPort: 8080
-        volumeMounts:
-        - mountPath: "/data"
-          name: post-counter-storage
-      volumes:
-      - name: post-counter-storage
-        persistentVolumeClaim:
-          claimName: post-counter-pvc
+        env:
+        - name: REDIS_HOST
+          value: "redis"  # Redis service name
+        - name: REDIS_PORT
+          value: "6379"
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: counter-service
+spec:
+  type: NodePort
+  ports:
+    - port: 8080
+      targetPort: 8080
+      nodePort: 30080 
+  selector:
+    app: counter-service
