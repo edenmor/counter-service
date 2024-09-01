@@ -1,0 +1,35 @@
+---
+- name: Deploy counter service application
+  hosts: local_ubuntu
+  become: true
+  tasks:
+    - name: Update apt packages
+      apt:
+        update_cache: yes
+    
+    - name: Install Docker
+      apt:
+        name: docker.io
+        state: present
+    
+    - name: Install Docker Compose
+      apt:
+        name: docker-compose
+        state: present
+
+    - name: Clone repository
+      git:
+        repo: 'https://github.com/edenmor/counter-service.git'
+        dest: /home/debian/counter-service
+        version: 'redis'
+
+    - name: Stop application with Docker Compose
+      command: docker-compose down
+      args:
+        chdir: /home/debian/counter-service
+    - name: Start application with Docker Compose
+      command: docker-compose up -d
+      args:
+        chdir: /home/ubuntu/counter-service
+
+
