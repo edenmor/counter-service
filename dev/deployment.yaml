@@ -14,7 +14,7 @@ spec:
     spec:
       containers:
       - name: counter-service
-        image: edenmor1989/counter-service:persistent
+        image: edenmor1989/counter-service:persistent2
         ports:
         - containerPort: 8080
         env:
