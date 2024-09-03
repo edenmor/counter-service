@@ -3,7 +3,7 @@ kind: Deployment
 metadata:
   name: counter-service
 spec:
-  replicas: 1
+  replicas: 2
   selector:
     matchLabels:
       app: counter-service
@@ -14,7 +14,7 @@ spec:
     spec:
       containers:
       - name: counter-service
-        image: edenmor1989/counter-service:persistent2
+        image: edenmor1989/counter-service:persistent3
         ports:
         - containerPort: 8080
         env:
