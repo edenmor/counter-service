@@ -1,0 +1,16 @@
+counterService:
+  replicas: 1
+  image: edenmor1989/counter-service
+  tag: "persistentredisname"
+  service:
+    type: NodePort
+
+redis:
+  replicas: 1
+  image: "redis:alpine"
+  service:
+    name: "counter-service-redis"
+    type: ClusterIP
+
+persistentVolumeClaim:
+  storage: 1Gi
