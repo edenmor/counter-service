@@ -1,7 +1,7 @@
 counterService:
-  replicas: 1
+  replicas: 2
   image: edenmor1989/counter-service
-  tag: "persistentredisname"
+  tag: "persistentredisenvfix"
   service:
     type: NodePort
 
