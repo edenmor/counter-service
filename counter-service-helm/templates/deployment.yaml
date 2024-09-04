@@ -1,0 +1,56 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ .Release.Name }}-counter-service
+  labels:
+    app: counter-service
+spec:
+  replicas: {{ .Values.counterService.replicas }}
+  selector:
+    matchLabels:
+      app: counter-service
+  template:
+    metadata:
+      labels:
+        app: counter-service
+    spec:
+      containers:
+      - name: counter-service
+        image: "{{ .Values.counterService.image }}:{{ .Values.counterService.tag }}"
+        ports:
+        - containerPort: 8080
+        env:
+        - name: REDIS_HOST
+          value: "counter-service-redis"  # Redis service name
+        - name: REDIS_PORT
+          value: "6379"
+
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ .Release.Name }}-redis
+  labels:
+    app: redis
+spec:
+  replicas: {{ .Values.redis.replicas }}
+  selector:
+    matchLabels:
+      app: redis
+  template:
+    metadata:
+      labels:
+        app: redis
+    spec:
+      containers:
+      - name: redis
+        image: {{ .Values.redis.image }}
+        ports:
+        - containerPort: 6379
+        volumeMounts:
+        - mountPath: /data
+          name: redis-data
+      volumes:
+      - name: redis-data
+        persistentVolumeClaim:
+          claimName: post-counter-pvc
