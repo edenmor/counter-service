@@ -1,16 +1,41 @@
 from flask import Flask
+import redis
 
 app = Flask(__name__)
-counter = 0
+# Connect to Redis
+redis_host = os.getenv('REDIS_HOST', 'localhost')  # Default to 'localhost' if not set
+redis_port = int(os.getenv('REDIS_PORT', 6379))    # Default to 6379 if not set
 
+# Configure Redis connection
+r = redis.Redis(host=redis_host, port=redis_port, db=0)
+
+# Initialize counter if not already set
+if not r.exists('counter'):
+    r.set('counter', 0)
+@app.route('/reset', methods=['POST'])
+def reset_counter():
+    r.set('counter', 0)
+    return "Counter has been reset."
+if not r.exists('counter'):
+    r.set('counter', 0)
+@app.route('/one', methods=['POST'])
+def reset1_counter():
+    r.set('counter', 1)
+    return "Counter has been set to 1."
+@app.route('/two', methods=['POST'])
+def reset2_counter():
+    r.set('counter', 2)
+    return "Counter has been set to 2."
 @app.route('/', methods=['POST'])
 def increment_counter():
-    global counter
-    counter += 1
+    # Increment the counter in Redis
+    counter = r.incr('counter')
     return f"Counter incremented. Total POST requests: {counter}"
 
 @app.route('/', methods=['GET'])
 def display_counter():
+    # Retrieve the counter from Redis
+    counter = r.get('counter').decode('utf-8')
     return f"""
     <html>
         <head>
@@ -45,5 +70,4 @@ def display_counter():
     """
 
 if __name__ == '__main__':
-    app.run(debug=True, port=8082)
-
+    app.run(debug=True, port=8080)
