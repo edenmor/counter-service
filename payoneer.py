@@ -3,7 +3,11 @@ import redis
 
 app = Flask(__name__)
 # Connect to Redis
-r = redis.Redis(host='redis', port=6379, db=0)
+redis_host = os.getenv('REDIS_HOST', 'localhost')  # Default to 'localhost' if not set
+redis_port = int(os.getenv('REDIS_PORT', 6379))    # Default to 6379 if not set
+
+# Configure Redis connection
+r = redis.Redis(host=redis_host, port=redis_port, db=0)
 
 # Initialize counter if not already set
 if not r.exists('counter'):
@@ -18,7 +22,10 @@ if not r.exists('counter'):
 def reset1_counter():
     r.set('counter', 1)
     return "Counter has been set to 1."
-
+@app.route('/two', methods=['POST'])
+def reset2_counter():
+    r.set('counter', 2)
+    return "Counter has been set to 2."
 @app.route('/', methods=['POST'])
 def increment_counter():
     # Increment the counter in Redis
