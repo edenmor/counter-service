@@ -5,7 +5,7 @@ WORKDIR /app
 # Copy the dependencies file to the working directory
 COPY requirements.txt .
 # Install  dependencies
-RUN apt update && apt install -y curl 
+RUN apk update && apk add curl 
 RUN pip install --no-cache-dir -r requirements.txt
 COPY . .
 EXPOSE 8080
