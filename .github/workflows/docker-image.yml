@@ -28,7 +28,8 @@ jobs:
     needs: build-and-push
     steps:
       - uses: actions/checkout@v4
-
+        with:
+          ref: persistent
       - name: Update image tag in values.yaml
         run: |
           sed -i 's|image: .*|image: edenmor1989/counter-service:${{ github.run_id }}|' counter-service-helm/values.yaml
