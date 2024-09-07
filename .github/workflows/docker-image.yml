@@ -42,4 +42,4 @@ jobs:
           git commit -m "Update Docker image tag to ${{ github.run_id }}"
       
       - name: Push changes
-        run: git push origin persistent
+        run: git push --set-upstream origin persistent
