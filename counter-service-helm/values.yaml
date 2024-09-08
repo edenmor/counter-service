@@ -1,13 +1,13 @@
 counterService:
   replicas: 2
-  image: edenmor1989/counter-service:10760544916
+  image: edenmor1989/counter-service:10760550270
   tag: "persistentredisenvfixv1"
   service:
     type: NodePort
 
 redis:
   replicas: 1
-  image: edenmor1989/counter-service:10760544916
+  image: edenmor1989/counter-service:10760550270
   service:
     name: "counter-service-redis"
     type: ClusterIP
