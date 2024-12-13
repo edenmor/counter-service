@@ -11,31 +11,38 @@ jobs:
     name: Build and Push Docker Image
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v4
+      - uses: actions/checkout@v4
 
-    - name: Build the Docker image
-      run: docker build . --file Dockerfile --tag edenmor1989/counter-service:${{ github.run_id }}
+      - name: Build the Docker image
+        run: docker build . --file Dockerfile --tag edenmor1989/counter-service:${{ github.run_id }}
 
-    - name: Login to DockerHub
-      run: echo "${{ secrets.DOCKERHUB_TOKEN }}" | docker login -u "${{ secrets.DOCKERHUB_USERNAME }}" --password-stdin
+      - name: Login to DockerHub
+        run: echo "${{ secrets.DOCKERHUB_TOKEN }}" | docker login -u "${{ secrets.DOCKERHUB_USERNAME }}" --password-stdin
 
-    - name: Push Docker Image
-      run: docker push edenmor1989/counter-service:${{ github.run_id }}
+      - name: Push Docker Image
+        run: docker push edenmor1989/counter-service:${{ github.run_id }}
 
-  deploy:
-    name: Deploy to Production
+  update-helm-chart:
+    name: Update Helm Chart Values
     runs-on: ubuntu-latest
     needs: build-and-push
-    if: github.event_name == 'push'
     steps:
-    - name: SSH Deploy to Production Server
-      uses: appleboy/ssh-action@v0.1.0
-      with:
-        host: ${{ secrets.PROD_SERVER_HOST }}
-        username: ${{ secrets.PROD_SERVER_USER }}
-        key: ${{ secrets.SSH_PRIVATE_KEY }}
-        script: |
-          docker pull edenmor1989/counter-service:${{ github.run_id }}
-          docker stop counter-service || true
-          docker rm counter-service || true
-          docker run -d --restart unless-stopped --name counter-service -p 80:80 edenmor1989/counter-service:${{ github.run_id }}
+      - uses: actions/checkout@v4
+        with:
+          token: ${{ secrets.TOKEN_GITHUB }}
+          ref: persistent
+      - name: Update image tag in values.yaml
+        run: |
+          sed -i 's|image: .*|image: edenmor1989/counter-service:${{ github.run_id }}|' counter-service-helm/values.yaml
+          
+      - name: Commit changes
+        run: |
+          git config --local user.email "action@github.com"
+          git config --local user.name "GitHub Action"
+          git add counter-service-helm/values.yaml
+          git commit -m "Update Docker image tag to ${{ github.run_id }}"
+      - name: Push changes
+        env:
+          TOKEN_GITHUB: ${{ secrets.TOKEN_GITHUB }}  # Pass GitHub token to the environment
+        run: |
+          git push --set-upstream origin persistent
