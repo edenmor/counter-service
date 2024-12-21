@@ -22,20 +22,20 @@ jobs:
     - name: Push Docker Image
       run: docker push edenmor1989/counter-service:${{ github.run_id }}
 
-  deploy:
-    name: Deploy to Production
-    runs-on: ubuntu-latest
-    needs: build-and-push
-    if: github.event_name == 'push'
-    steps:
-    - name: SSH Deploy to Production Server
-      uses: appleboy/ssh-action@v0.1.0
-      with:
-        host: ${{ secrets.PROD_SERVER_HOST }}
-        username: ${{ secrets.PROD_SERVER_USER }}
-        key: ${{ secrets.SSH_PRIVATE_KEY }}
-        script: |
-          docker pull edenmor1989/counter-service:${{ github.run_id }}
-          docker stop counter-service || true
-          docker rm counter-service || true
-          docker run -d --restart unless-stopped --name counter-service -p 80:80 edenmor1989/counter-service:${{ github.run_id }}
+  # deploy:
+  #   name: Deploy to Production
+  #   runs-on: ubuntu-latest
+  #   needs: build-and-push
+  #   if: github.event_name == 'push'
+  #   steps:
+  #   - name: SSH Deploy to Production Server
+  #     uses: appleboy/ssh-action@v0.1.0
+  #     with:
+  #       host: ${{ secrets.PROD_SERVER_HOST }}
+  #       username: ${{ secrets.PROD_SERVER_USER }}
+  #       key: ${{ secrets.SSH_PRIVATE_KEY }}
+  #       script: |
+  #         docker pull edenmor1989/counter-service:${{ github.run_id }}
+  #         docker stop counter-service || true
+  #         docker rm counter-service || true
+  #         docker run -d --restart unless-stopped --name counter-service -p 80:80 edenmor1989/counter-service:${{ github.run_id }}
