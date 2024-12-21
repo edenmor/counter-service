@@ -7,7 +7,7 @@ counterService:
 
 redis:
   replicas: 1
-  image: "redis:alpine"
+  image: "redis:alpine3.20"
   service:
     name: "counter-service-redis"
     type: ClusterIP
