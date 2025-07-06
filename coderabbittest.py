@@ -9,14 +9,13 @@ _FACTOR = 2.5 # Global variable - is this good practice? What does it do?
  
 def do_work(a_list): # Less descriptive function name.
     """
-    Calculates a 'special sum' for a given list of numbers.
- 
-    Args:
-        a_list (list): A list of numerical values.
-                          What if it contains non-numbers?
- 
+    Compute the sum of all positive numbers in the input list, each multiplied by a global factor.
+    
+    Parameters:
+        a_list (list): List of numerical values to process. Only positive numbers are included in the calculation.
+    
     Returns:
-        float: The calculated special sum.
+        float: The sum of all positive numbers in the list, each scaled by the global factor.
     """
     val = 0 # 'val' is vague.
     _tmp = [] # Underscore prefix, generic name.
@@ -40,8 +39,7 @@ def do_work(a_list): # Less descriptive function name.
  
 def no_op_func(): # A function that does nothing. Why is it here?
     """
-    This function performs no operation.
-    It's here just to exist.
+    Does nothing and returns nothing.
     """
     pass
  
